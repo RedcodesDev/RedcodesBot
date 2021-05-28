@@ -9,6 +9,8 @@ import java.util.Random;
 
 import javax.security.auth.login.LoginException;
 
+import dev.redcodes.bot.data.MongoDBHandler;
+import dev.redcodes.bot.projects.listener.ProjectReactionListener;
 import dev.redcodes.bot.token.DONOTOPEN;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -46,7 +48,7 @@ public class Redcodes {
 
 	public Redcodes() throws LoginException, IllegalArgumentException {
 
-		// MongoDBHandler.connect();
+		MongoDBHandler.connect();
 
 		String token = null;
 		if (Dev) {
@@ -62,6 +64,8 @@ public class Redcodes {
 
 		builder.setEnabledIntents(GatewayIntent.getIntents(GatewayIntent.ALL_INTENTS));
 		builder.setMemberCachePolicy(MemberCachePolicy.ALL);
+
+		builder.addEventListeners(new ProjectReactionListener());
 
 		jda = builder.build();
 		System.out.println("The Bot is now Online!");
@@ -87,7 +91,7 @@ public class Redcodes {
 						if (jda != null) {
 							jda.getPresence().setStatus(OnlineStatus.OFFLINE);
 							jda.shutdown();
-							// MongoDBHandler.disconnect();
+							MongoDBHandler.disconnect();
 							System.out.println("The Bot is now Offline!");
 						}
 						if (loop != null) {
